@@ -40,7 +40,13 @@ float playbackRate = 1;
 * 2 = STOPPED
 * 3 = FINISHED
 */
-int MIXER_STATE = 0;
+int MIXER_STATE = 3;
+
+/*
+* 0 = false
+* 1 = true
+*/
+int exists = 0;
 
 ma_result result;
 ma_decoder_config decoderConfig;
@@ -53,6 +59,10 @@ ma_uint32 iDecoder;
 * When I decoded an mp3 and a flac at the same time and seeked the app crashes so running with mutexes fixes this.
 */
 ma_mutex decoderMutex;
+
+inline int getMixerState() {
+	return MIXER_STATE;
+}
 
 double getPlaybackPosition() {
 	ma_uint64 pos = 0;
@@ -70,17 +80,13 @@ double getPlaybackPosition() {
 double getDuration() {
 	ma_uint64 length = 0;
 	if (g_pDecodersActive[g_pLongestDecoderIndex] == MA_TRUE) {
-		if (decoderMutex == NULL) {
-			ma_mutex_init(&decoderMutex);
-		}
-		ma_mutex_lock(&decoderMutex);
-		ma_decoder_get_length_in_pcm_frames(&g_pDecoders[g_pLongestDecoderIndex], &length);
-		ma_mutex_unlock(&decoderMutex);
+		length = g_pDecoderLengths[g_pLongestDecoderIndex];
 	}
 	return (double)length / (SAMPLE_RATE * 0.001);
 }
 
 void seekToPCMFrame(int64_t pos) {
+	if (exists == 0) return;
 	/*ma_uint64 cursor;
 	ma_decoder_get_cursor_in_pcm_frames(&g_pDecoders[g_pLongestDecoderIndex], &cursor);
 	if (pos == cursor) return; // Don't be a piece of shit and ignore doing this*/
@@ -107,14 +113,6 @@ void freeThingies() {
 	//free(g_pDecoderConfigs);
 	free(g_pDecodersVolume);
 	//free(g_pDecodersPan);
-}
-
-ma_bool32 are_all_decoders_at_end()
-{
-	for (ma_uint32 i = 0; i < g_decoderCount; ++i) {
-		if (g_pDecodersActive[i] == MA_TRUE) return MA_FALSE;
-	}
-	return MA_TRUE;
 }
 
 ma_uint32 read_pcm_frames_f32(ma_uint32 index, float* pBuffer, ma_uint32 frameCount)
@@ -191,7 +189,7 @@ void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
 			}
 		}
 
-		if (!are_all_decoders_at_end()) {
+		if (g_pDecodersActive[g_pLongestDecoderIndex]) {
 			if (stretch == nullptr) {
 				stretch = new signalsmith::stretch::SignalsmithStretch();
 				stretch->presetCheaper(CHANNEL_COUNT, SAMPLE_RATE);
@@ -224,6 +222,7 @@ void amplify_decoder(int index, double volume) {
 }
 
 void setPlaybackRate(float value) {
+	if (exists == 0) return;
 	if (value == playbackRate) return; // No change
 
 	playbackRate = value;
@@ -262,6 +261,7 @@ void setPlaybackRate(float value) {
 }
 
 void start() {
+	if (exists == 0) return;
 	if (MIXER_STATE == 3) {
 		seekToPCMFrame(0);
 	}
@@ -270,6 +270,7 @@ void start() {
 }
 
 void stop() {
+	if (exists == 0) return;
 	ma_device_stop(&device);
 	MIXER_STATE = 2;
 }
@@ -279,6 +280,8 @@ int stopped() {
 }
 
 void destroy() {
+	if (exists == 0) return;
+	exists = 0;
 	ma_device_uninit(&device);
 
 	for (iDecoder = 0; iDecoder < g_decoderCount; ++iDecoder) {
@@ -319,6 +322,7 @@ void loadFiles(std::vector<const char*> argv)
 			freeThingies();
 
 			printf("Failed to load %s.\n", argv[iDecoder]);
+			exists = 0;
 			return;
 		}
 
@@ -332,6 +336,8 @@ void loadFiles(std::vector<const char*> argv)
 			absoluteLengthOfSong = g_pDecoderLengths[iDecoder];
 			g_pLongestDecoderIndex = iDecoder;
 		}
+
+		exists = 1;
 	}
 
 	/* Create only a single device. The decoders will be mixed together in the callback. In this example the data format needs to be the same as the decoders. */

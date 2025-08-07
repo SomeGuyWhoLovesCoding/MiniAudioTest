@@ -54,20 +54,21 @@ class Main extends Application
 		newDeltaTimeSeconds = deltaTime < 1000000000 ? 0 : Int64.div(deltaTime, 1000000000).low;
 		newDeltaTime = newDeltaTimeSeconds + (Int64.mod(deltaTime, 1000000000).low * 0.000001);
 
-		/*if (MiniAudio.MIXER_STATE == 1) {
+		if (MiniAudio.getMixerState() == 1) {
 			var rawPlaybackPosition = MiniAudio.getPlaybackPosition();
-			_time = rawPlaybackPosition;
-			/*var diff = rawPlaybackPosition - _time;
-			if (diff > 20) {
+			var diff = rawPlaybackPosition - _time;
+			var subtract = diff * 0.002;
+			if (diff > 50) {
 				_time = rawPlaybackPosition;
 			} else {
 				_time += newDeltaTime;
-				_time -= diff * 0.0025;
-			}/
-		}*/
+				//Sys.println(subtract);
+				_time -= subtract;
+				Sys.println('Time: $time, Drift Adjustment Value: $subtract');
+			}
+		}
 
 		super.update(deltaTime);
-		Sys.println(MiniAudio.getPlaybackPosition());
 	}
 
 	/**
