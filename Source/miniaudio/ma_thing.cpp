@@ -256,16 +256,12 @@ void destroy() {
 
 void loadFiles(std::vector<const char*> argv)
 {
-	for (int i = 0; i < argv.size(); ++i) {
-		printf(argv[i] + '\n');
-	}
-
 	if (argv.size() == 0) {
 		printf("No input files.\n");
 		return;
 	}
 
-	g_decoderCount   = argv.size(); // Because why not. fuck it.
+	g_decoderCount   = argv.size();
 	g_pDecoders      = (ma_decoder*)malloc(sizeof(*g_pDecoders)      * g_decoderCount);
 	g_pDecodersActive = (ma_bool32*)malloc(sizeof(ma_bool32) * g_decoderCount);
 	g_pDecoderLengths = (ma_uint64*)malloc(sizeof(ma_uint64) * g_decoderCount);
