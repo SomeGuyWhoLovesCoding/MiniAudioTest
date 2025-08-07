@@ -1,0 +1,15 @@
+#ifndef MA_THING_H
+#define MA_THING_H
+
+#include <stdio.h>
+
+void init();
+void destroy();
+void start();
+void stop();
+double getPlaybackPosition();
+void seekToPCMFrame(int64_t pos);
+void loadFiles(const char** argv);
+void deactivate_decoder(int index);
+void amplify_decoder(int index, double volume);
+#endif // MA_THING_H
