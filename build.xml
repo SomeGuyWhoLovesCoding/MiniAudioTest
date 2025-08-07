@@ -1,0 +1,36 @@
+<xml>
+	<pragma once="true" />
+	<set name="PROJECT_DIR" value="${this_dir}/Source" />
+	<files id="__main__">
+	<compilerflag value="-I${PROJECT_DIR}/miniaudio/" />
+		<compilerflag value="-DNO_PRECOMPILED_HEADERS"/>
+	</files>
+
+	<files id="haxe">
+		<compilerflag value="-I${PROJECT_DIR}/miniaudio/" />
+	</files>
+
+	<files id="miniaudio">
+		<compilerflag value="-I${PROJECT_DIR}/miniaudio/" />
+		<compilerflag value="-I${PROJECT_DIR}/miniaudio/signalsmith-stretch" />
+		<!--<file name="${PROJECT_DIR}/miniaudio/ma_thing.cpp" />
+		<file name="${PROJECT_DIR}/miniaudio/miniaudio.c" />
+		<file name="${PROJECT_DIR}/miniaudio/miniaudio.h" />-->
+		<!--<file name="${PROJECT_DIR}/miniaudio/signalsmith-stretch/signalsmith-stretch.h" />
+		<file name="${PROJECT_DIR}/miniaudio/signalsmith-stretch/dsp/common.h" />
+		<file name="${PROJECT_DIR}/miniaudio/signalsmith-stretch/dsp/curves.h" />
+		<file name="${PROJECT_DIR}/miniaudio/signalsmith-stretch/dsp/delay.h" />
+		<file name="${PROJECT_DIR}/miniaudio/signalsmith-stretch/dsp/envelopes.h" />
+		<file name="${PROJECT_DIR}/miniaudio/signalsmith-stretch/dsp/fft.h" />
+		<file name="${PROJECT_DIR}/miniaudio/signalsmith-stretch/dsp/filters.h" />
+		<file name="${PROJECT_DIR}/miniaudio/signalsmith-stretch/dsp/mix.h" />
+		<file name="${PROJECT_DIR}/miniaudio/signalsmith-stretch/dsp/perf.h" />
+		<file name="${PROJECT_DIR}/miniaudio/signalsmith-stretch/dsp/rates.h" />
+		<file name="${PROJECT_DIR}/miniaudio/signalsmith-stretch/dsp/spectral.h" />
+		<file name="${PROJECT_DIR}/miniaudio/signalsmith-stretch/dsp/windows.h" />-->
+	</files>
+
+	<target id="haxe">
+		<files id="miniaudio" />
+	</target>
+</xml>
