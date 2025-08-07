@@ -16,7 +16,7 @@ extern class StdVectorString
     @:runtime inline static function fromStringArray(arr:Array<String>):StdVectorString {
         var vec = StdVectorString.create();
         for (s in arr) {
-            vec.push_back(cpp.ConstCharStar.fromString(s));
+            vec.push_back(ConstCharStar.fromString(s));
         }
         return vec;
     }
