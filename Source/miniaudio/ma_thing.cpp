@@ -56,10 +56,28 @@ ma_mutex decoderMutex;
 
 double getPlaybackPosition() {
 	ma_uint64 pos = 0;
-	ma_mutex_lock(&decoderMutex);
-	ma_decoder_get_cursor_in_pcm_frames(&g_pDecoders[g_pLongestDecoderIndex], &pos);
-	ma_mutex_unlock(&decoderMutex);
+	if (g_pDecodersActive[g_pLongestDecoderIndex] == MA_TRUE) {
+		if (decoderMutex == NULL) {
+			ma_mutex_init(&decoderMutex);
+		}
+		ma_mutex_lock(&decoderMutex);
+		ma_decoder_get_cursor_in_pcm_frames(&g_pDecoders[g_pLongestDecoderIndex], &pos);
+		ma_mutex_unlock(&decoderMutex);
+	}
 	return (double)pos / (SAMPLE_RATE * 0.001);
+}
+
+double getDuration() {
+	ma_uint64 length = 0;
+	if (g_pDecodersActive[g_pLongestDecoderIndex] == MA_TRUE) {
+		if (decoderMutex == NULL) {
+			ma_mutex_init(&decoderMutex);
+		}
+		ma_mutex_lock(&decoderMutex);
+		ma_decoder_get_length_in_pcm_frames(&g_pDecoders[g_pLongestDecoderIndex], &length);
+		ma_mutex_unlock(&decoderMutex);
+	}
+	return (double)length / (SAMPLE_RATE * 0.001);
 }
 
 void seekToPCMFrame(int64_t pos) {
@@ -67,6 +85,9 @@ void seekToPCMFrame(int64_t pos) {
 	ma_decoder_get_cursor_in_pcm_frames(&g_pDecoders[g_pLongestDecoderIndex], &cursor);
 	if (pos == cursor) return; // Don't be a piece of shit and ignore doing this*/
 
+	if (decoderMutex == NULL) {
+		ma_mutex_init(&decoderMutex);
+	}
 	ma_mutex_lock(&decoderMutex);
 	for (iDecoder = 0; iDecoder < g_decoderCount; ++iDecoder) {
 		ma_decoder_seek_to_pcm_frame(&g_pDecoders[iDecoder], pos > 0 ? pos : 0);
@@ -138,6 +159,9 @@ void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
 		for (ma_uint32 i = 0; i < g_decoderCount; ++i) {
 			if (!g_pDecodersActive[i]) continue;
 
+			if (decoderMutex == NULL) {
+				ma_mutex_init(&decoderMutex);
+			}
 			ma_mutex_lock(&decoderMutex);
 			ma_uint32 framesRead = read_pcm_frames_f32(i, pOutputF32, frameCount);
 			ma_mutex_unlock(&decoderMutex);
@@ -156,6 +180,9 @@ void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
 		for (ma_uint32 i = 0; i < g_decoderCount; ++i) {
 			if (!g_pDecodersActive[i]) continue;
 
+			if (decoderMutex == NULL) {
+				ma_mutex_init(&decoderMutex);
+			}
 			ma_mutex_lock(&decoderMutex);
 			ma_uint32 framesRead = read_pcm_frames_f32(i, inputMix, maxFramesToRead);
 			ma_mutex_unlock(&decoderMutex);
@@ -165,6 +192,10 @@ void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
 		}
 
 		if (!are_all_decoders_at_end()) {
+			if (stretch == nullptr) {
+				stretch = new signalsmith::stretch::SignalsmithStretch();
+				stretch->presetCheaper(CHANNEL_COUNT, SAMPLE_RATE);
+			}
 			stretch->process(
 				inputMix,
 				maxFramesToRead,
@@ -201,15 +232,25 @@ void setPlaybackRate(float value) {
 
 	ma_uint64 cursor2 = 0;
 	if (g_pDecodersActive[g_pLongestDecoderIndex] == MA_TRUE) {
+		if (decoderMutex == NULL) {
+			ma_mutex_init(&decoderMutex);
+		}
 		ma_mutex_lock(&decoderMutex);
 		ma_decoder_get_cursor_in_pcm_frames(&decoder, &cursor2);
 		ma_mutex_unlock(&decoderMutex);
 	}
 
 	// Reset stretch state with new rate
+	if (stretch == nullptr) {
+		stretch = new signalsmith::stretch::SignalsmithStretch();
+		stretch->presetCheaper(CHANNEL_COUNT, SAMPLE_RATE);
+	}
 	int latencyFrames = stretch->inputLatency();
 	std::vector<float> latencyData(latencyFrames * CHANNEL_COUNT);
 
+	if (decoderMutex == NULL) {
+		ma_mutex_init(&decoderMutex);
+	}
 	ma_mutex_lock(&decoderMutex);
 	ma_decoder_read_pcm_frames(&decoder, latencyData.data(), latencyFrames, NULL);
 	ma_decoder_seek_to_pcm_frame(&decoder, cursor2);
@@ -235,14 +276,6 @@ void stop() {
 
 int stopped() {
 	return MIXER_STATE == 3 ? 1 : 0;
-}
-
-void init() {
-
-	ma_mutex_init(&decoderMutex);
-
-	stretch = new signalsmith::stretch::SignalsmithStretch();
-	stretch->presetCheaper(CHANNEL_COUNT, SAMPLE_RATE);
 }
 
 void destroy() {
