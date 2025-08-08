@@ -198,8 +198,12 @@ void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
 			memcpy(pOutputF32, stretchedOutput, sizeof(float) * frameCount * CHANNEL_COUNT);
 		} else {
 			memset(pOutputF32, 0, sizeof(float) * frameCount * CHANNEL_COUNT);
-			MIXER_STATE = 3;
 		}
+	}
+
+	if (!g_pDecodersActive[g_pLongestDecoderIndex]) {
+		// If you're reached this point, that means the song has been finished.
+		MIXER_STATE = 3;
 	}
 
 	(void)pInput;

@@ -98,24 +98,36 @@ class Mixer {
 	static public function updateSmoothMusicTime(deltaTime:Float):Void {
 		if (isPlaying()) {
 			var rawPlaybackPosition = MiniAudio.getPlaybackPosition();
-			var diff = rawPlaybackPosition - _time;
-			var subtract = diff * 0.002;
-			if (diff > 50) {
-				_time = rawPlaybackPosition;
-			} else {
-				_time += deltaTime;
-				//Sys.println(subtract);
+			_time += deltaTime;
+			var multiply = 0.01; // Default drift adjustment value
+			if (_time > rawPlaybackPosition) {
+				while (_time - rawPlaybackPosition > multiply && /* Make sure not to overload your drift fixer */ multiply < 0.75) {
+					multiply += 0.01; // Double the adjustment value if the drift is too large
+				}
+				var subtract = (_time - rawPlaybackPosition) * multiply;
 				_time -= subtract;
-				Sys.println('Time: $time, Drift Adjustment Value: $subtract');
 			}
+			Sys.println('Time: $time, Drift Adjustment Value: $multiply');
 		}
 	}
 
 	static function isPlaying():Bool {
-		return MiniAudio.getMixerState() == 1;
+		return MiniAudio.getMixerState() == MixerState.PLAYING;
 	}
 
 	static function isStopped():Bool {
 		return MiniAudio.stopped() == 1;
 	}
+}
+
+enum abstract MixerState(Int) from Int to Int {
+	/**
+		- `0` - Stopped
+		- `1` - Playing
+		- `2` - Paused
+		- `3` - Finished
+	 */
+	var PLAYING = 1;
+	var STOPPED = 2;
+	var FINISHED = 3;
 }
