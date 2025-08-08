@@ -3,13 +3,16 @@
 	
 	<meta title="MiniAudioTest" package="com.sample.miniaudiotest" version="1.0.0" company="MiniAudioTest" />
 	<app main="Main" path="Export" file="MiniAudioTest" />
-	
+
 	<source path="Source" />
-	
+
 	<haxelib name="lime" />
-	
+
 	<assets path="Assets" rename="assets" />
 
-	<window fps="60" />
+	<window fps="1000" />
+
+	<icon path="Assets/icon.png" />
+	<icon path="Assets/icon-16.png" size="16" />
 	
 </project>
