@@ -3,15 +3,33 @@ package;
 import lime.app.Application;
 import haxe.Int64;
 import music.Mixer;
+import lime.ui.KeyCode;
 
 class Main extends Application
 {
-	public function new()
+	override function onWindowCreate()
 	{
-		super();
-
 		Mixer.load(Sys.args());
 		Mixer.startMusic();
+
+		window.onKeyDown.add(function(keycode, keymod) {
+			switch (keycode) {
+				case KeyCode.RETURN: // Space
+					if (Mixer.isPlaying()) {
+						Mixer.stopMusic();
+					} else {
+						Mixer.startMusic();
+					}
+				case KeyCode.UP: // Up Arrow
+					Mixer.time += 1000;
+				case KeyCode.DOWN: // Down Arrow
+					Mixer.time -= 1000;
+				case KeyCode.ESCAPE: // Escape
+					Mixer.destroyMusic();
+					Sys.exit(0);
+				default:
+			}
+		});
 	}
 
 	var newDeltaTimeSeconds:Int = 0;

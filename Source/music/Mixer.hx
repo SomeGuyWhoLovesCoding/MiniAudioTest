@@ -54,8 +54,9 @@ import utils.Tools;
 	- Acts as a **high-level abstraction** for music playback
 	- Does **not** perform low-level audio processing directly
  */
+@:publicFields
 class Mixer {
-	public static inline var sampleRate:Int = 44100;
+	static inline var sampleRate:Int = 44100;
 
 	static var time(get, set):Float;
 
@@ -95,7 +96,7 @@ class Mixer {
 	}
 
 	static public function updateSmoothMusicTime(deltaTime:Float):Void {
-		if (MiniAudio.getMixerState() == 1) {
+		if (isPlaying()) {
 			var rawPlaybackPosition = MiniAudio.getPlaybackPosition();
 			var diff = rawPlaybackPosition - _time;
 			var subtract = diff * 0.002;
@@ -108,5 +109,13 @@ class Mixer {
 				Sys.println('Time: $time, Drift Adjustment Value: $subtract');
 			}
 		}
+	}
+
+	static function isPlaying():Bool {
+		return MiniAudio.getMixerState() == 1;
+	}
+
+	static function isStopped():Bool {
+		return MiniAudio.stopped() == 1;
 	}
 }
