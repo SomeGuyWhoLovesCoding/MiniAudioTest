@@ -4,6 +4,7 @@ import miniaudio.MiniAudio;
 import miniaudio.StdVectorString;
 import cpp.ConstCharStar;
 import utils.Tools;
+import miniaudio.include.IncludeNative;
 
 /**
 	# Music Playback Helper (Haxe + MiniAudio)
@@ -73,28 +74,34 @@ class Mixer {
 	private static var _length:Float;
 
 	static function set_time(value:Float) {
+		IncludeNative.include();
 		MiniAudio.seekToPCMFrame(Tools.betterInt64FromFloat(value * 0.001) * sampleRate);
 		return _time = MiniAudio.getPlaybackPosition();
 	}
 
 	static public function load(files:Array<String>):Void { // Don't rename this to `loadFiles` as it will conflict with the MiniAudio extern class
+		IncludeNative.include();
 		MiniAudio.loadFiles(files);
 		_length = MiniAudio.getDuration();
 	}
 
-	inline static public function startMusic():Void {
+	static public function startMusic():Void {
+		IncludeNative.include();
 		MiniAudio.start();
 	}
 
-	inline static public function stopMusic():Void {
+	static public function stopMusic():Void {
+		IncludeNative.include();
 		MiniAudio.stop();
 	}
 
-	inline static public function destroyMusic():Void {
+	static public function destroyMusic():Void {
+		IncludeNative.include();
 		MiniAudio.destroy();
 	}
 
 	static public function updateSmoothMusicTime(deltaTime:Float):Void {
+		IncludeNative.include();
 		if (MiniAudio.getMixerState() == 1) {
 			var rawPlaybackPosition = MiniAudio.getPlaybackPosition();
 			var diff = rawPlaybackPosition - _time;
