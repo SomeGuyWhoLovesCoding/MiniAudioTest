@@ -3,11 +3,12 @@
 	<set name="PROJECT_DIR" value="${this_dir}/Source" />
 
 	<files id="haxe">
-		<compilerflag value="-I${PROJECT_DIR}/miniaudio/" />
+		<compilerflag value="-I${PROJECT_DIR}/miniaudio" />
 	</files>
 
 	<files id="miniaudio">
-		<compilerflag value="-I${PROJECT_DIR}/miniaudio/" />
+		<compilerflag value="-I${PROJECT_DIR}/miniaudio" />
+		<compilerflag value="-I${PROJECT_DIR}/miniaudio/include" />
 		<compilerflag value="-I${PROJECT_DIR}/miniaudio/signalsmith-stretch" />
 		<!--<file name="${PROJECT_DIR}/miniaudio/ma_thing.cpp" />
 		<file name="${PROJECT_DIR}/miniaudio/miniaudio.c" />

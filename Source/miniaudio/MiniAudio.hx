@@ -1,6 +1,6 @@
 package miniaudio;
 
-@:include("./ma_thing.h")
+@:include("./include/ma_thing.h")
 @:buildXml('<include name="../../../miniaudioBuild.xml" />')
 extern class MiniAudio {
 	@:native("destroy") static function destroy():Void;

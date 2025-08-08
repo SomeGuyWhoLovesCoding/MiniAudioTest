@@ -7,8 +7,11 @@
 
 	* Note: Fuck hxcpp's externing shit I don't wanna deal with it for any longer
 */
+#ifndef MA_THING_H
+#define MA_THING_H
+#include "include/ma_thing.h"
+#endif /* MA_THING_H */
 
-#include "ma_thing.h"
 #include "signalsmith-stretch/signalsmith-stretch.h"
 
 #define MINIAUDIO_IMPLEMENTATION
@@ -60,7 +63,7 @@ ma_uint32 iDecoder;
 */
 ma_mutex decoderMutex;
 
-inline int getMixerState() {
+int getMixerState() {
 	return MIXER_STATE;
 }
 
@@ -269,7 +272,7 @@ void stop() {
 	MIXER_STATE = 2;
 }
 
-inline int stopped() {
+int stopped() {
 	return MIXER_STATE == 3 ? 1 : 0;
 }
 
