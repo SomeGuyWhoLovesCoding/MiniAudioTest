@@ -7,9 +7,9 @@
 	</files>
 
 	<files id="miniaudio">
-		<compilerflag value="-I${PROJECT_DIR}/miniaudio" />
-		<compilerflag value="-I${PROJECT_DIR}/miniaudio/include" />
-		<compilerflag value="-I${PROJECT_DIR}/miniaudio/signalsmith-stretch" />
+		<compilerflag value="-I${PROJECT_DIR}/music/miniaudio" />
+		<compilerflag value="-I${PROJECT_DIR}/music/miniaudio/include" />
+		<compilerflag value="-I${PROJECT_DIR}/music/miniaudio/signalsmith-stretch" />
 	</files>
 
 	<target id="haxe">
