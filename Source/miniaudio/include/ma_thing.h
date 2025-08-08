@@ -1,3 +1,5 @@
+#ifndef MA_THING_H
+#define MA_THING_H
 #pragma once
 #include <vector>
 
@@ -13,3 +15,4 @@ void stop(void);
 void destroy(void);
 int stopped(void);
 void loadFiles(std::vector<const char*> argv);
+#endif /* MA_THING_H */
