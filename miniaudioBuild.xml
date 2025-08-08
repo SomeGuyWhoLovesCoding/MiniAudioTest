@@ -1,10 +1,6 @@
 <xml>
 	<pragma once="true" />
 	<set name="PROJECT_DIR" value="${this_dir}/Source" />
-	<files id="__main__">
-	<compilerflag value="-I${PROJECT_DIR}/miniaudio/" />
-		<compilerflag value="-DNO_PRECOMPILED_HEADERS"/>
-	</files>
 
 	<files id="haxe">
 		<compilerflag value="-I${PROJECT_DIR}/miniaudio/" />

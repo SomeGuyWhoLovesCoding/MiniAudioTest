@@ -8,12 +8,14 @@
 	* Note: Fuck hxcpp's externing shit I don't wanna deal with it for any longer
 */
 
+#include "ma_thing.h"
 #include "signalsmith-stretch/signalsmith-stretch.h"
 
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
 
 #include <stdio.h>
+#include <vector>
 
 /*
 For simplicity, this example requires the device to use floating point samples.
@@ -29,9 +31,7 @@ ma_decoder* g_pDecoders;
 ma_bool32* g_pDecodersActive;
 ma_uint64* g_pDecoderLengths;
 int g_pLongestDecoderIndex;
-//ma_decoder_config* g_pDecoderConfigs;
 float*  g_pDecodersVolume;
-//float*  g_pDecodersPan;
 float playbackRate = 1;
 
 /*
@@ -87,9 +87,6 @@ double getDuration() {
 
 void seekToPCMFrame(int64_t pos) {
 	if (exists == 0) return;
-	/*ma_uint64 cursor;
-	ma_decoder_get_cursor_in_pcm_frames(&g_pDecoders[g_pLongestDecoderIndex], &cursor);
-	if (pos == cursor) return; // Don't be a piece of shit and ignore doing this*/
 
 	if (decoderMutex == NULL) {
 		ma_mutex_init(&decoderMutex);
@@ -110,9 +107,7 @@ void freeThingies() {
 	free(g_pDecoders);
 	free(g_pDecodersActive);
 	free(g_pDecoderLengths);
-	//free(g_pDecoderConfigs);
 	free(g_pDecodersVolume);
-	//free(g_pDecodersPan);
 }
 
 ma_uint32 read_pcm_frames_f32(ma_uint32 index, float* pBuffer, ma_uint32 frameCount)
@@ -151,7 +146,6 @@ void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
 	MA_ASSERT(pDevice->playback.format == SAMPLE_FORMAT);
 
 	if (playbackRate == 1.0f) {
-		// Bypass time-stretching: just mix directly into output
 		memset(pOutputF32, 0, sizeof(float) * frameCount * CHANNEL_COUNT);
 
 		for (ma_uint32 i = 0; i < g_decoderCount; ++i) {
@@ -275,7 +269,7 @@ void stop() {
 	MIXER_STATE = 2;
 }
 
-int stopped() {
+inline int stopped() {
 	return MIXER_STATE == 3 ? 1 : 0;
 }
 
