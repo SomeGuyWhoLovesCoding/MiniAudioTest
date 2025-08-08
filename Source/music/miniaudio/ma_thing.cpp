@@ -7,10 +7,7 @@
 
 	* Note: Fuck hxcpp's externing shit I don't wanna deal with it for any longer
 */
-#ifndef MA_THING_H
-#define MA_THING_H
 #include "include/ma_thing.h"
-#endif /* MA_THING_H */
 
 #include "signalsmith-stretch/signalsmith-stretch.h"
 

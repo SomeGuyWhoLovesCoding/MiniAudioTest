@@ -1,4 +1,4 @@
-package miniaudio;
+package music.miniaudio;
 
 import cpp.RawPointer;
 import cpp.ConstCharStar;

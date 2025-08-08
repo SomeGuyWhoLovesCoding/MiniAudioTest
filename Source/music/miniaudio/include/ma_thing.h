@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MA_THING_H
+#define MA_THING_H
 #include <vector>
 
 int getMixerState(void);
@@ -13,3 +14,4 @@ void start(void);
 void stop(void);
 int stopped(void);
 void loadFiles(std::vector<const char*> argv);
+#endif /* MA_THING_H */

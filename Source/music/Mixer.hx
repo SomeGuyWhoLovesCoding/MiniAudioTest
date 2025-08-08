@@ -1,10 +1,35 @@
 package music;
 
-import miniaudio.MiniAudio;
-import miniaudio.StdVectorString;
+import music.miniaudio.StdVectorString;
 import cpp.ConstCharStar;
 import utils.Tools;
-import miniaudio.include.IncludeNative;
+
+@:buildXml('<include name="../../../miniaudioBuild.xml" />')
+@:unreflective @:keep
+@:include("./miniaudio/include/ma_thing.h")
+extern class MiniAudio {
+	@:native("destroy") static function destroy():Void;
+	@:native("start") static function start():Void;
+	@:native("stop") static function stop():Void;
+	@:native("stopped") static function stopped():Int;
+
+	@:runtime inline static function loadFiles(arr:Array<String>):Void {
+		var vec = StdVectorString.fromStringArray(arr);
+		//Sys.println("Loading files: " + vec.data());
+		_loadFiles(vec);
+	}
+	@:native("loadFiles") static function _loadFiles(argv:StdVectorString):Void;
+
+	@:native("getPlaybackPosition") static function getPlaybackPosition():Float;
+	@:native("getDuration") static function getDuration():Float;
+	@:native("getMixerState") static function getMixerState():Int;
+
+	@:native("setPlaybackRate") static function setPlaybackRate(playbackRate:Float):Void;
+	@:native("seekToPCMFrame") static function seekToPCMFrame(pos:cpp.Int64):Void;
+	@:native("deactivate_decoder") static function deactivate_decoder(index:Int):Void;
+	@:native("amplify_decoder") static function amplify_decoder(index:Int, volume:Float):Void;
+}
+
 
 /**
 	# Music Playback Helper (Haxe + MiniAudio)
@@ -74,34 +99,28 @@ class Mixer {
 	private static var _length:Float;
 
 	static function set_time(value:Float) {
-		IncludeNative.include();
 		MiniAudio.seekToPCMFrame(Tools.betterInt64FromFloat(value * 0.001) * sampleRate);
 		return _time = MiniAudio.getPlaybackPosition();
 	}
 
 	static public function load(files:Array<String>):Void { // Don't rename this to `loadFiles` as it will conflict with the MiniAudio extern class
-		IncludeNative.include();
 		MiniAudio.loadFiles(files);
 		_length = MiniAudio.getDuration();
 	}
 
 	static public function startMusic():Void {
-		IncludeNative.include();
 		MiniAudio.start();
 	}
 
 	static public function stopMusic():Void {
-		IncludeNative.include();
 		MiniAudio.stop();
 	}
 
 	static public function destroyMusic():Void {
-		IncludeNative.include();
 		MiniAudio.destroy();
 	}
 
 	static public function updateSmoothMusicTime(deltaTime:Float):Void {
-		IncludeNative.include();
 		if (MiniAudio.getMixerState() == 1) {
 			var rawPlaybackPosition = MiniAudio.getPlaybackPosition();
 			var diff = rawPlaybackPosition - _time;
