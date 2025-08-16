@@ -7,7 +7,7 @@
 
 	* Note: Fuck hxcpp's externing shit I don't wanna deal with it for any longer
 */
-#define HL_NAME(n) _##n
+#define HL_NAME(n) miniaudio_##n
 
 #include <hl.h>
 
