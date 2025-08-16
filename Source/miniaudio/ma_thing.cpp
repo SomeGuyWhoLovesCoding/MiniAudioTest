@@ -8,7 +8,7 @@
 	* Note: Fuck hxcpp's externing shit I don't wanna deal with it for any longer
 */
 #ifdef HASHLINK
-#define HL_NAME(n) miniaudio_##n
+#define HL_NAME(n) ma_thing_##n
 
 #include <hl.h>
 #endif

@@ -1,13 +1,12 @@
 <xml>
 	<pragma once="true" />
 
-	<set name="HL_DEFINE" value="1" />
-	<cppflag value="HASHLINK" if="HL_DEFINE" />
+	<cppflag value="HASHLINK" if="HASHLINK windows" />
 
 	<set name="PROJECT_DIR" value="${this_dir}/Source" />
-	<set name="HASHLINK" value="F:/jerem/Downloads+/hl-1.12" if="HL_DEFINE" />
-	<set name="HL_INCLUDE" value="${HASHLINK}/include" if="HL_DEFINE" />
-	<set name="HL_BIN" value="${HASHLINK}" if="HL_DEFINE" />
+	<set name="HASHLINK" value="F:/jerem/Downloads+/hl-1.12" if="HASHLINK windows" />
+	<set name="HL_INCLUDE" value="${HASHLINK}/include" if="HASHLINK windows" />
+	<set name="HL_BIN" value="${HASHLINK}" if="HASHLINK windows" />
 
 	<echo value="hashlink: ${HASHLINK}" />
     <echo value="hashlink include: ${HL_INCLUDE}" />
@@ -21,18 +20,16 @@
 		<compilerflag value="-I${HASHLINK}/include" />
 	</files>
 
-	<target id="default" output="ma_thing" toolid="dll" tool="linker" if="HL_DEFINE">
-		<section if="mingw || macos || linux">
-			<lib name="-lpthread" />
-		</section>
-
+	<target id="default" output="ma_thing" toolid="dll" tool="linker" >
 		<files id="miniaudio" />
-		<libpath name="${HASHLINK}" if="windows" />
-		<libpath name="/usr/local/lib" if='macos' />
-		<lib name="libhl.lib" if="windows" />
-		<lib name="-lhl" unless="windows" />
-		<ext value=".hdll" />
-		<outdir name="Export/hl/bin" />
+		<section if="HASHLINK windows">
+			<libpath name="${HASHLINK}" if="HASHLINK windows" />
+			<libpath name="/usr/local/lib" if='HASHLINK macos' />
+			<lib name="libhl.lib" if="windows" />
+			<lib name="-lhl" unless="windows" />
+			<ext value=".hdll" />
+			<outdir name="Export/hl/bin" />
+		</section>
 	</target>
 
 	<target id="haxe">
