@@ -30,8 +30,8 @@ extern class StdVectorString
 }
 #elseif hl
 typedef ConstCharStar = hl.Abstract<"const char*">;
-@:native('std::vector<const char*>')
-class StdVectorString
+typedef StdVectorStringPtr = hl.Abstract<"std::vector<const char*>">;
+abstract StdVectorString(StdVectorStringPtr)
 {
     public static function create() : StdVectorString {return null;}
 
