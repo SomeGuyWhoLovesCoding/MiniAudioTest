@@ -394,16 +394,21 @@ HL_PRIM double HL_NAME(get_duration)(_NO_ARG) {
 }
 
 HL_PRIM void HL_NAME(seek_to_pcm_frame)(ma_uint64 pos) {
-	ma_uint64 pos = 0;
-	if (g_pDecodersActive[g_pLongestDecoderIndex] == MA_TRUE) {
-		if (decoderMutex == NULL) {
-			ma_mutex_init(&decoderMutex);
-		}
-		ma_mutex_lock(&decoderMutex);
-		ma_decoder_get_cursor_in_pcm_frames(&g_pDecoders[g_pLongestDecoderIndex], &pos);
-		ma_mutex_unlock(&decoderMutex);
+	if (exists == 0) return;
+
+	if (decoderMutex == NULL) {
+		ma_mutex_init(&decoderMutex);
 	}
-	return (double)pos / (SAMPLE_RATE * 0.001);
+	ma_mutex_lock(&decoderMutex);
+	for (iDecoder = 0; iDecoder < g_decoderCount; ++iDecoder) {
+		ma_decoder_seek_to_pcm_frame(&g_pDecoders[iDecoder], pos > 0 ? pos : 0);
+
+		// If we seek to before EOF, reactivate
+		if (pos < g_pDecoderLengths[iDecoder]) {
+			g_pDecodersActive[iDecoder] = MA_TRUE;
+		}
+	}
+	ma_mutex_unlock(&decoderMutex);
 }
 
 /*HL_PRIM void HL_NAME(free_thingies)(_NO_ARG) {
@@ -563,7 +568,7 @@ HL_PRIM void HL_NAME(load_files)(std::vector<const char*> argv)
 	}
 }
 
-DEFINE_HL_PRIM(_VOID, get_mixer_state, _NO_ARG)
+DEFINE_HL_PRIM(_I32, get_mixer_state, _NO_ARG)
 DEFINE_HL_PRIM(_F64, get_playback_position, _NO_ARG)
 DEFINE_HL_PRIM(_F64, get_duration, _NO_ARG)
 DEFINE_HL_PRIM(_VOID, seek_to_pcm_frame, _I64)
