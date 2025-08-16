@@ -57,7 +57,7 @@ class MiniAudio {
 	@:hlNative("ma_thing", "deactivate_decoder_hl") public static function deactivate_decoder(index:Int):Void {}
 	@:hlNative("ma_thing", "amplify_decoder_hl") public static function amplify_decoder(index:Int, volume:Float):Void {}
 }
-/*#else
+#else
 class MiniAudio {
 	static function destroy():Void {}
 	static function start():Void {}
@@ -67,11 +67,7 @@ class MiniAudio {
 		return 0;
 	}
 
-	inline static function loadFiles(arr:Array<String>):Void {
-		var vec = StdVectorString.fromStringArray(arr);
-		_loadFiles(vec);
-	}
-	static function _loadFiles(argv:StdVectorString):Void {}
+	static function loadFiles(arr:Array<String>):Void {}
 
 	static function getPlaybackPosition():Float {
 		return 0;
@@ -87,5 +83,5 @@ class MiniAudio {
 	static function seekToPCMFrame(pos:haxe.Int64):Void {}
 	static function deactivate_decoder(index:Int):Void {}
 	function amplify_decoder(index:Int, volume:Float):Void {}
-}*/
+}
 #end
