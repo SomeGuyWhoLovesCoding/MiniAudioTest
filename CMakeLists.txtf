@@ -1,0 +1,24 @@
+option(WITH_MA "Build ma_thing.hdll." ON)
+
+if(WITH_MA)
+    add_library(ma_thing.hdll
+        ma_thing.cpp
+    )
+
+    set_as_hdll(ma_thing)
+
+    target_link_libraries(ma_thing.hdll
+        libhl
+        d3d11
+        dxgi
+        d3dcompiler
+        xinput9_1_0
+        dinput8
+    )
+
+    install(
+        TARGETS
+            ma_thing.hdll
+        DESTINATION ${HDLL_DESTINATION}
+    )
+endif()

@@ -1,5 +1,8 @@
 <xml>
 	<pragma once="true" />
+	<set name="HL_INCLUDE" value="${HASHLINK}/include" if="HASHLINK windows" unless="HL_INCLUDE" />
+	<set name="HL_BIN" value="${HASHLINK}" if="HASHLINK windows" unless="HL_BIN" />
+
 	<set name="PROJECT_DIR" value="${this_dir}/Source" />
 
 	<files id="haxe">
@@ -15,5 +18,20 @@
 
 	<target id="haxe">
 		<files id="miniaudio" />
+		<echo value="haha" />
+	</target>
+
+	<target id="default" output="ma_thing" toolid="dll" tool="linker">
+		<section if="mingw || macos || linux">
+			<lib name="-lpthread" />
+		</section>
+
+		<files id="miniaudio" />
+		<libpath name="${HL_BIN}" if="windows" />
+		<libpath name="/usr/local/lib" if='macos' />
+		<lib name="libhl.lib" if="windows" />
+		<lib name="-lhl" unless="windows" />
+		<ext value=".hdll" />
+		<outdir name="out" />
 	</target>
 </xml>
