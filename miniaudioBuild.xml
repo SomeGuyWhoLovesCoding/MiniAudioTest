@@ -4,6 +4,7 @@
 	<!-- <set name="HL_DEFINE" if="HASHLINK windows" /> -->
 	<!-- Switch to this if compiling with `haxelib run hxcpp miniaudioBuild.xml`! -->
 	<set name="HL_DEFINE" value="1" />
+	<cppflag value="HASHLINK" if="HL_DEFINE" />
 
 	<set name="PROJECT_DIR" value="${this_dir}/Source" />
 	<set name="HASHLINK" value="F:/jerem/Downloads+/hl-1.12" if="HL_DEFINE" />
