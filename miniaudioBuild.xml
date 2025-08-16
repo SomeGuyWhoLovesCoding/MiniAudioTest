@@ -10,10 +10,12 @@
 	</files>
 
 	<files id="miniaudio">
+		<compilerflag value="-I${HL_INCLUDE}" if="HL_INCLUDE" />
 		<compilerflag value="-I${PROJECT_DIR}/miniaudio" />
 		<compilerflag value="-I${PROJECT_DIR}/miniaudio/include" />
 		<compilerflag value="-I${PROJECT_DIR}/miniaudio/signalsmith-stretch" />
 		<file name="${PROJECT_DIR}/miniaudio/ma_thing.cpp" />
+		<compilerflag value="-I${HASHLINK}" />
 	</files>
 
 	<target id="haxe">
