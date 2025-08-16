@@ -368,7 +368,7 @@ HL_PRIM int HL_NAME(get_mixer_state)(_NO_ARG) {
 }
 
 HL_PRIM double HL_NAME(get_playback_position)(_NO_ARG) {
-	int64_t pos = 0;
+	ma_uint64 pos = 0;
 	if (g_pDecodersActive[g_pLongestDecoderIndex] == MA_TRUE) {
 		if (decoderMutex == NULL) {
 			ma_mutex_init(&decoderMutex);
@@ -381,7 +381,7 @@ HL_PRIM double HL_NAME(get_playback_position)(_NO_ARG) {
 }
 
 HL_PRIM double HL_NAME(get_duration)(_NO_ARG) {
-	int64_t pos = 0;
+	ma_uint64 pos = 0;
 	if (g_pDecodersActive[g_pLongestDecoderIndex] == MA_TRUE) {
 		if (decoderMutex == NULL) {
 			ma_mutex_init(&decoderMutex);
@@ -393,8 +393,8 @@ HL_PRIM double HL_NAME(get_duration)(_NO_ARG) {
 	return (double)pos / (SAMPLE_RATE * 0.001);
 }
 
-HL_PRIM void HL_NAME(seek_to_pcm_frame)(int64_t pos) {
-	int64_t pos = 0;
+HL_PRIM void HL_NAME(seek_to_pcm_frame)(ma_uint64 pos) {
+	ma_uint64 pos = 0;
 	if (g_pDecodersActive[g_pLongestDecoderIndex] == MA_TRUE) {
 		if (decoderMutex == NULL) {
 			ma_mutex_init(&decoderMutex);
@@ -563,15 +563,15 @@ HL_PRIM void HL_NAME(load_files)(std::vector<const char*> argv)
 	}
 }
 
-DEFINE_HL_PRIM (_VOID, get_mixer_state, _NO_ARG);
-DEFINE_HL_PRIM (_F64, get_playback_position, _NO_ARG);
-DEFINE_HL_PRIM (_F64, get_duration, _NO_ARG);
-DEFINE_HL_PRIM (_VOID, seek_to_pcm_frame, _I64);
-DEFINE_HL_PRIM (_VOID, deactivate_decoder_hl, _FUN(_I32));
-DEFINE_HL_PRIM (_VOID, amplify_decoder_hl, _FUN(_I32, _F64));
-DEFINE_HL_PRIM (_VOID, set_playback_rate, _F32);
-DEFINE_HL_PRIM (_VOID, start_hl, _VOID);
-DEFINE_HL_PRIM (_VOID, stop_hl, _VOID);
-DEFINE_HL_PRIM (_VOID, stopped_hl, _BOOL);
-DEFINE_HL_PRIM (_VOID, destroy_hl, _VOID);
-DEFINE_HL_PRIM (_VOID, load_files, _VOID);
+DEFINE_HL_PRIM(_VOID, get_mixer_state, _NO_ARG)
+DEFINE_HL_PRIM(_F64, get_playback_position, _NO_ARG)
+DEFINE_HL_PRIM(_F64, get_duration, _NO_ARG)
+DEFINE_HL_PRIM(_VOID, seek_to_pcm_frame, _I64)
+DEFINE_HL_PRIM(_VOID, deactivate_decoder_hl, _I32)
+DEFINE_HL_PRIM(_VOID, amplify_decoder_hl, _FUN(_I32, _F64))
+DEFINE_HL_PRIM(_VOID, set_playback_rate, _F32)
+DEFINE_HL_PRIM(_VOID, start_hl, _VOID)
+DEFINE_HL_PRIM(_VOID, stop_hl, _VOID)
+DEFINE_HL_PRIM(_VOID, stopped_hl, _BOOL)
+DEFINE_HL_PRIM(_VOID, destroy_hl, _VOID)
+DEFINE_HL_PRIM(_VOID, load_files, _VOID)
