@@ -1,10 +1,14 @@
 <xml>
 	<pragma once="true" />
 
+	<!-- <set name="HL_DEFINE" if="HASHLINK windows" /> -->
+	<!-- Switch to this if compiling with `haxelib run hxcpp miniaudioBuild.xml`! -->
+	<set name="HL_DEFINE" value="1" />
+
 	<set name="PROJECT_DIR" value="${this_dir}/Source" />
-	<set name="HASHLINK" value="F:/jerem/Downloads+/hl-1.12" />
-	<set name="HL_INCLUDE" value="${HASHLINK}/include" />
-	<set name="HL_BIN" value="${HASHLINK}" />
+	<set name="HASHLINK" value="F:/jerem/Downloads+/hl-1.12" if="HL_DEFINE" />
+	<set name="HL_INCLUDE" value="${HASHLINK}/include" if="HL_DEFINE" />
+	<set name="HL_BIN" value="${HASHLINK}" if="HL_DEFINE" />
 
 	<echo value="hashlink: ${HASHLINK}" />
     <echo value="hashlink include: ${HL_INCLUDE}" />
@@ -18,7 +22,7 @@
 		<compilerflag value="-I${HASHLINK}/include" />
 	</files>
 
-	<target id="default" output="ma_thing" toolid="dll" tool="linker">
+	<target id="default" output="ma_thing" toolid="dll" tool="linker" if="HL_DEFINE">
 		<section if="mingw || macos || linux">
 			<lib name="-lpthread" />
 		</section>
@@ -29,6 +33,10 @@
 		<lib name="libhl.lib" if="windows" />
 		<lib name="-lhl" unless="windows" />
 		<ext value=".hdll" />
-		<outdir name="Source/miniaudio/hdll" />
+		<outdir name="Export/hl/bin" />
+	</target>
+
+	<target id="haxe">
+		<files id="miniaudio" />
 	</target>
 </xml>

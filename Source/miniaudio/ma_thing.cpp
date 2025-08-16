@@ -7,9 +7,11 @@
 
 	* Note: Fuck hxcpp's externing shit I don't wanna deal with it for any longer
 */
+#ifdef HASHLINK
 #define HL_NAME(n) miniaudio_##n
 
 #include <hl.h>
+#endif
 
 #include "include/ma_thing.h"
 
@@ -363,6 +365,7 @@ void loadFiles(std::vector<const char*> argv)
 
 // Now for the hl part
 
+#ifdef HASHLINK
 HL_PRIM int HL_NAME(get_mixer_state)(_NO_ARG) {
 	return MIXER_STATE;
 }
@@ -573,10 +576,11 @@ DEFINE_PRIM(_F64, get_playback_position, _NO_ARG)
 DEFINE_PRIM(_F64, get_duration, _NO_ARG)
 DEFINE_PRIM(_VOID, seek_to_pcm_frame, _I64)
 DEFINE_PRIM(_VOID, deactivate_decoder_hl, _I32)
-DEFINE_PRIM(_VOID, amplify_decoder_hl, _FUN(_I32, _F64))
+DEFINE_PRIM(_VOID, amplify_decoder_hl, _I32 _F64)
 DEFINE_PRIM(_VOID, set_playback_rate, _F32)
 DEFINE_PRIM(_VOID, start_hl, _VOID)
 DEFINE_PRIM(_VOID, stop_hl, _VOID)
 DEFINE_PRIM(_VOID, stopped_hl, _BOOL)
 DEFINE_PRIM(_VOID, destroy_hl, _VOID)
 DEFINE_PRIM(_VOID, load_files, _ABSTRACT("std::vector<const char*>"))
+#endif

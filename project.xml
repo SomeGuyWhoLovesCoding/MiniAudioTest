@@ -10,7 +10,7 @@
 
 	<assets path="Assets" rename="assets" />
 
-	<window fps="1000" />
+	<window fps="60" />
 
 	<icon path="Assets/icon.png" />
 	<icon path="Assets/icon-16.png" size="16" />
