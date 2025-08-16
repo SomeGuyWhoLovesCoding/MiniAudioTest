@@ -29,6 +29,6 @@
 		<lib name="libhl.lib" if="windows" />
 		<lib name="-lhl" unless="windows" />
 		<ext value=".hdll" />
-		<outdir name="out" />
+		<outdir name="Source/miniaudio/hdll" />
 	</target>
 </xml>
