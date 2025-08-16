@@ -1,27 +1,22 @@
 <xml>
 	<pragma once="true" />
-	<set name="HL_INCLUDE" value="${HASHLINK}/include" if="HASHLINK windows" unless="HL_INCLUDE" />
-	<set name="HL_BIN" value="${HASHLINK}" if="HASHLINK windows" unless="HL_BIN" />
 
 	<set name="PROJECT_DIR" value="${this_dir}/Source" />
+	<set name="HASHLINK" value="F:/jerem/Downloads+/hl-1.12" />
+	<set name="HL_INCLUDE" value="${HASHLINK}/include" />
+	<set name="HL_BIN" value="${HASHLINK}" />
 
-	<files id="haxe">
-		<compilerflag value="-I${PROJECT_DIR}/miniaudio" />
-	</files>
+	<echo value="hashlink: ${HASHLINK}" />
+    <echo value="hashlink include: ${HL_INCLUDE}" />
+    <echo value="hashlink bin: ${HL_BIN}" />
 
 	<files id="miniaudio">
-		<compilerflag value="-I${HL_INCLUDE}" if="HL_INCLUDE" />
 		<compilerflag value="-I${PROJECT_DIR}/miniaudio" />
 		<compilerflag value="-I${PROJECT_DIR}/miniaudio/include" />
 		<compilerflag value="-I${PROJECT_DIR}/miniaudio/signalsmith-stretch" />
 		<file name="${PROJECT_DIR}/miniaudio/ma_thing.cpp" />
-		<compilerflag value="-I${HASHLINK}" />
+		<compilerflag value="-I${HASHLINK}/include" />
 	</files>
-
-	<target id="haxe">
-		<files id="miniaudio" />
-		<echo value="haha" />
-	</target>
 
 	<target id="default" output="ma_thing" toolid="dll" tool="linker">
 		<section if="mingw || macos || linux">
@@ -29,7 +24,7 @@
 		</section>
 
 		<files id="miniaudio" />
-		<libpath name="${HL_BIN}" if="windows" />
+		<libpath name="${HASHLINK}" if="windows" />
 		<libpath name="/usr/local/lib" if='macos' />
 		<lib name="libhl.lib" if="windows" />
 		<lib name="-lhl" unless="windows" />

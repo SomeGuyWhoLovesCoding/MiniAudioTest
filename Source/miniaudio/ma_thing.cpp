@@ -368,7 +368,7 @@ HL_PRIM int HL_NAME(get_mixer_state)(_NO_ARG) {
 }
 
 HL_PRIM double HL_NAME(get_playback_position)(_NO_ARG) {
-	ma_uint64 pos = 0;
+	int64_t pos = 0;
 	if (g_pDecodersActive[g_pLongestDecoderIndex] == MA_TRUE) {
 		if (decoderMutex == NULL) {
 			ma_mutex_init(&decoderMutex);
@@ -381,7 +381,7 @@ HL_PRIM double HL_NAME(get_playback_position)(_NO_ARG) {
 }
 
 HL_PRIM double HL_NAME(get_duration)(_NO_ARG) {
-	ma_uint64 pos = 0;
+	int64_t pos = 0;
 	if (g_pDecodersActive[g_pLongestDecoderIndex] == MA_TRUE) {
 		if (decoderMutex == NULL) {
 			ma_mutex_init(&decoderMutex);
@@ -394,7 +394,7 @@ HL_PRIM double HL_NAME(get_duration)(_NO_ARG) {
 }
 
 HL_PRIM void HL_NAME(seek_to_pcm_frame)(int64_t pos) {
-	ma_uint64 pos = 0;
+	int64_t pos = 0;
 	if (g_pDecodersActive[g_pLongestDecoderIndex] == MA_TRUE) {
 		if (decoderMutex == NULL) {
 			ma_mutex_init(&decoderMutex);
