@@ -568,15 +568,15 @@ HL_PRIM void HL_NAME(load_files)(std::vector<const char*> argv)
 	}
 }
 
-DEFINE_HL_PRIM(_I32, get_mixer_state, _NO_ARG);
-DEFINE_HL_PRIM(_F64, get_playback_position, _NO_ARG);
-DEFINE_HL_PRIM(_F64, get_duration, _NO_ARG);
-DEFINE_HL_PRIM(_VOID, seek_to_pcm_frame, _I64);
-DEFINE_HL_PRIM(_VOID, deactivate_decoder_hl, _I32);
-DEFINE_HL_PRIM(_VOID, amplify_decoder_hl, _FUN(_I32, _F64));
-DEFINE_HL_PRIM(_VOID, set_playback_rate, _F32);
-DEFINE_HL_PRIM(_VOID, start_hl, NO_ARG);
-DEFINE_HL_PRIM(_VOID, stop_hl, NO_ARG);
-DEFINE_HL_PRIM(_VOID, stopped_hl, _BOOL);
-DEFINE_HL_PRIM(_VOID, destroy_hl, NO_ARG);
-DEFINE_HL_PRIM(_VOID, load_files, _ABSTRACT("std::vector<const char*>"));
+DEFINE_HL_PRIM(_I32, get_mixer_state, _NO_ARG)
+DEFINE_HL_PRIM(_F64, get_playback_position, _NO_ARG)
+DEFINE_HL_PRIM(_F64, get_duration, _NO_ARG)
+DEFINE_HL_PRIM(_VOID, seek_to_pcm_frame, _I64)
+DEFINE_HL_PRIM(_VOID, deactivate_decoder_hl, _I32)
+DEFINE_HL_PRIM(_VOID, amplify_decoder_hl, _FUN(_I32, _F64))
+DEFINE_HL_PRIM(_VOID, set_playback_rate, _F32)
+DEFINE_HL_PRIM(_VOID, start_hl, NO_ARG)
+DEFINE_HL_PRIM(_VOID, stop_hl, NO_ARG)
+DEFINE_HL_PRIM(_VOID, stopped_hl, _BOOL)
+DEFINE_HL_PRIM(_VOID, destroy_hl, NO_ARG)
+DEFINE_HL_PRIM(_VOID, load_files, _ABSTRACT("std::vector<const char*>"))
