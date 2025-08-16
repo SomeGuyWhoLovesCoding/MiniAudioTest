@@ -12,6 +12,8 @@
 	* Yannaris did
 */
 #ifdef HASHLINK
+//#define HL_NAME(n) ma_thing_##n
+
 #include <hl.h>
 #endif
 
@@ -367,6 +369,7 @@ void loadFiles(std::vector<const char*> argv)
 
 // Now for the hl part
 
+#ifdef HASHLINK
 HL_PRIM int HL_NAME(get_mixer_state)(_NO_ARG) {
 	return MIXER_STATE;
 }
@@ -584,3 +587,4 @@ DEFINE_PRIM(_VOID, stop_hl, _VOID)
 DEFINE_PRIM(_VOID, stopped_hl, _BOOL)
 DEFINE_PRIM(_VOID, destroy_hl, _VOID)
 DEFINE_PRIM(_VOID, load_files, _ABSTRACT("std::vector<const char*>"))
+#endif
