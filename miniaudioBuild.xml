@@ -1,8 +1,6 @@
 <xml>
 	<pragma once="true" />
 
-	<!-- <set name="HL_DEFINE" if="HASHLINK windows" /> -->
-	<!-- Switch to this if compiling with `haxelib run hxcpp miniaudioBuild.xml`! -->
 	<set name="HL_DEFINE" value="1" />
 	<cppflag value="HASHLINK" if="HL_DEFINE" />
 
