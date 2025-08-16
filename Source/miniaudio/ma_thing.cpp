@@ -6,9 +6,13 @@
 	(It was updated recently as of the time when developing the time stretching implementation for fun)
 
 	* Note: Fuck hxcpp's externing shit I don't wanna deal with it for any longer
+
+
+	* I will fucking kill whoever structured hl like this(not)
+	* Yannaris did
 */
 #ifdef HASHLINK
-#define HL_NAME(n) ma_thing_##n
+//#define HL_NAME(n) ma_thing_##n
 
 #include <hl.h>
 #endif
