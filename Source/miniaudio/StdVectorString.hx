@@ -29,16 +29,18 @@ extern class StdVectorString
     function size() : Int;
 }
 #elseif hl
-typedef ConstCharStar = hl.Abstract<"const char*">;
+import cpp.ConstCharStar;
+
 typedef StdVectorStringPtr = hl.Abstract<"std::vector<const char*>">;
 abstract StdVectorString(StdVectorStringPtr)
 {
     public static function create() : StdVectorString {return null;}
 
-    @:runtime inline public static function fromStringArray(arr:Array<String>):StdVectorString {
+    @:from
+    public static function fromStringArray(arr:Array<String>):StdVectorString {
         var vec = StdVectorString.create();
         for (s in arr) {
-            vec.push_back(untyped s.bytes);
+            vec.push_back(ConstCharStar.fromString(s));
         }
         return vec;
     }

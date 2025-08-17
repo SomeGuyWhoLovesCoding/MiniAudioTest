@@ -21,18 +21,18 @@ extern class MiniAudio {
 	@:native("getDuration") static function getDuration():Float;
 	@:native("getMixerState") static function getMixerState():Int;
 
-	@:native("setPlaybackRate") static function setPlaybackRate(playbackRate:Float):Void;
+	@:native("setPlaybackRate") static function setPlaybackRate(playbackRate:cpp.Float32):Void;
 	@:native("seekToPCMFrame") static function seekToPCMFrame(pos:cpp.Int64):Void;
 	@:native("deactivate_decoder") static function deactivate_decoder(index:Int):Void;
 	@:native("amplify_decoder") static function amplify_decoder(index:Int, volume:Float):Void;
 }
 #elseif hl
 class MiniAudio {
-	@:hlNative("ma_thing", "destroy_hl") public static function destroy():Void {}
-	@:hlNative("ma_thing", "start_hl") public static function start():Void {}
-	@:hlNative("ma_thing", "stop_hl") public static function stop():Void {}
+	@:hlNative("ma_thing", "destroy") public static function destroy():Void {}
+	@:hlNative("ma_thing", "start") public static function start():Void {}
+	@:hlNative("ma_thing", "stop") public static function stop():Void {}
 
-	@:hlNative("ma_thing", "stopped_hl") public static function stopped():Int {
+	@:hlNative("ma_thing", "stopped") public static function stopped():Int {
 		return 0;
 	}
 
@@ -40,7 +40,7 @@ class MiniAudio {
 		var vec = StdVectorString.fromStringArray(arr);
 		_loadFiles(vec);
 	}
-	@:hlNative("ma_thing", "load_files") public static function _loadFiles(argv:StdVectorString):Void {}
+	@:hlNative("ma_thing", "loadFiles") public static function _loadFiles(argv:StdVectorString):Void {}
 
 	@:hlNative("ma_thing", "get_playback_position") public static function getPlaybackPosition():Float {
 		return 0;
@@ -52,7 +52,7 @@ class MiniAudio {
 		return 0;
 	}
 
-	@:hlNative("ma_thing", "set_playback_rate") public static function setPlaybackRate(playbackRate:Float):Void {}
+	@:hlNative("ma_thing", "setPlaybackRate") public static function setPlaybackRate(playbackRate:hl.F32):Void {}
 	@:hlNative("ma_thing", "seek_to_pcm_frame") public static function seekToPCMFrame(pos:hl.I64):Void {}
 	@:hlNative("ma_thing", "deactivate_decoder_hl") public static function deactivate_decoder(index:Int):Void {}
 	@:hlNative("ma_thing", "amplify_decoder_hl") public static function amplify_decoder(index:Int, volume:Float):Void {}

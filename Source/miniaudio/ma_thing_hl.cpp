@@ -6,7 +6,16 @@
 	(It was updated recently as of the time when developing the time stretching implementation for fun)
 
 	* Note: Fuck hxcpp's externing shit I don't wanna deal with it for any longer
+
+
+	* I will fucking kill whoever structured hl like this(not)
+	* Yannaris did
 */
+
+#define HL_NAME(n) ma_thing_##n
+
+#include <hl.h>
+
 #include "include/ma_thing.h"
 
 #include "signalsmith-stretch/signalsmith-stretch.h"
@@ -59,49 +68,6 @@ ma_uint32 iDecoder;
 * When I decoded an mp3 and a flac at the same time and seeked the app crashes so running with mutexes fixes this.
 */
 ma_mutex decoderMutex;
-
-int getMixerState() {
-	return MIXER_STATE;
-}
-
-double getPlaybackPosition() {
-	ma_uint64 pos = 0;
-	if (g_pDecodersActive[g_pLongestDecoderIndex] == MA_TRUE) {
-		if (decoderMutex == NULL) {
-			ma_mutex_init(&decoderMutex);
-		}
-		ma_mutex_lock(&decoderMutex);
-		ma_decoder_get_cursor_in_pcm_frames(&g_pDecoders[g_pLongestDecoderIndex], &pos);
-		ma_mutex_unlock(&decoderMutex);
-	}
-	return (double)pos / (SAMPLE_RATE * 0.001);
-}
-
-double getDuration() {
-	ma_uint64 length = 0;
-	if (g_pDecodersActive[g_pLongestDecoderIndex] == MA_TRUE) {
-		length = g_pDecoderLengths[g_pLongestDecoderIndex];
-	}
-	return (double)length / (SAMPLE_RATE * 0.001);
-}
-
-void seekToPCMFrame(int64_t pos) {
-	if (exists == 0) return;
-
-	if (decoderMutex == NULL) {
-		ma_mutex_init(&decoderMutex);
-	}
-	ma_mutex_lock(&decoderMutex);
-	for (iDecoder = 0; iDecoder < g_decoderCount; ++iDecoder) {
-		ma_decoder_seek_to_pcm_frame(&g_pDecoders[iDecoder], pos > 0 ? pos : 0);
-
-		// If we seek to before EOF, reactivate
-		if (pos < g_pDecoderLengths[iDecoder]) {
-			g_pDecodersActive[iDecoder] = MA_TRUE;
-		}
-	}
-	ma_mutex_unlock(&decoderMutex);
-}
 
 void freeThingies() {
 	free(g_pDecoders);
@@ -209,17 +175,74 @@ void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
 	(void)pInput;
 }
 
-void deactivate_decoder(int index) {
+HL_PRIM int HL_NAME(get_mixer_state)(_NO_ARG) {
+	return MIXER_STATE;
+}
+
+HL_PRIM double HL_NAME(get_playback_position)(_NO_ARG) {
+	ma_uint64 pos = 0;
+	if (g_pDecodersActive[g_pLongestDecoderIndex] == MA_TRUE) {
+		if (decoderMutex == NULL) {
+			ma_mutex_init(&decoderMutex);
+		}
+		ma_mutex_lock(&decoderMutex);
+		ma_decoder_get_cursor_in_pcm_frames(&g_pDecoders[g_pLongestDecoderIndex], &pos);
+		ma_mutex_unlock(&decoderMutex);
+	}
+	return (double)pos / (SAMPLE_RATE * 0.001);
+}
+
+HL_PRIM double HL_NAME(get_duration)(_NO_ARG) {
+	ma_uint64 pos = 0;
+	if (g_pDecodersActive[g_pLongestDecoderIndex] == MA_TRUE) {
+		if (decoderMutex == NULL) {
+			ma_mutex_init(&decoderMutex);
+		}
+		ma_mutex_lock(&decoderMutex);
+		ma_decoder_get_cursor_in_pcm_frames(&g_pDecoders[g_pLongestDecoderIndex], &pos);
+		ma_mutex_unlock(&decoderMutex);
+	}
+	return (double)pos / (SAMPLE_RATE * 0.001);
+}
+
+HL_PRIM void HL_NAME(seek_to_pcm_frame)(ma_uint64 pos) {
+	if (exists == 0) return;
+
+	if (decoderMutex == NULL) {
+		ma_mutex_init(&decoderMutex);
+	}
+	ma_mutex_lock(&decoderMutex);
+	for (iDecoder = 0; iDecoder < g_decoderCount; ++iDecoder) {
+		ma_decoder_seek_to_pcm_frame(&g_pDecoders[iDecoder], pos > 0 ? pos : 0);
+
+		// If we seek to before EOF, reactivate
+		if (pos < g_pDecoderLengths[iDecoder]) {
+			g_pDecodersActive[iDecoder] = MA_TRUE;
+		}
+	}
+	ma_mutex_unlock(&decoderMutex);
+}
+
+/*HL_PRIM void HL_NAME(free_thingies)(_NO_ARG) {
+	free(g_pDecoders);
+	free(g_pDecodersActive);
+	free(g_pDecoderLengths);
+	free(g_pDecodersVolume);
+}*/
+
+HL_PRIM void HL_NAME(deactivate_decoder_hl)(int index) {
 	if (index < g_decoderCount) {
 		g_pDecodersActive[index] = MA_FALSE;
 	}
 }
 
-void amplify_decoder(int index, double volume) {
-	g_pDecodersVolume[index] = volume;
+HL_PRIM void HL_NAME(amplify_decoder_hl)(int index, double volume) {
+	if (index < g_decoderCount || index > 0) {
+		g_pDecodersVolume[index] = volume;
+	}
 }
 
-void setPlaybackRate(float value) {
+HL_PRIM void HL_NAME(setPlaybackRate)(float value) {
 	if (exists == 0) return;
 	if (value == playbackRate) return; // No change
 
@@ -258,26 +281,23 @@ void setPlaybackRate(float value) {
 	stretch->seek(latencyData.data(), latencyFrames, playbackRate);
 }
 
-void start() {
+HL_PRIM void HL_NAME(start)(_NO_ARG) {
 	if (exists == 0) return;
-	if (MIXER_STATE == 3) {
-		seekToPCMFrame(0);
-	}
 	ma_device_start(&device);
 	MIXER_STATE = 1;
 }
 
-void stop() {
+HL_PRIM void HL_NAME(stop)(_NO_ARG) {
 	if (exists == 0) return;
 	ma_device_stop(&device);
 	MIXER_STATE = 2;
 }
 
-int stopped() {
-	return MIXER_STATE == 3 ? 1 : 0;
+HL_PRIM bool HL_NAME(stopped)(_NO_ARG) {
+	return MIXER_STATE == 3;
 }
 
-void destroy() {
+HL_PRIM void HL_NAME(destroy)(_NO_ARG) {
 	if (exists == 0) return;
 	exists = 0;
 	ma_device_uninit(&device);
@@ -288,7 +308,7 @@ void destroy() {
 	freeThingies();
 }
 
-void loadFiles(std::vector<const char*> argv)
+HL_PRIM void HL_NAME(loadFiles)(std::vector<const char*> argv)
 {
 	if (argv.size() == 0) {
 		printf("No input files.\n");
@@ -356,3 +376,16 @@ void loadFiles(std::vector<const char*> argv)
 		return;
 	}
 }
+
+DEFINE_PRIM(_I32, get_mixer_state, _NO_ARG)
+DEFINE_PRIM(_F64, get_playback_position, _NO_ARG)
+DEFINE_PRIM(_F64, get_duration, _NO_ARG)
+DEFINE_PRIM(_VOID, seek_to_pcm_frame, _I64)
+DEFINE_PRIM(_VOID, deactivate_decoder_hl, _I32)
+DEFINE_PRIM(_VOID, amplify_decoder_hl, _I32 _F64)
+DEFINE_PRIM(_VOID, setPlaybackRate, _F32)
+DEFINE_PRIM(_VOID, start, _NO_ARG)
+DEFINE_PRIM(_VOID, stop, _NO_ARG)
+DEFINE_PRIM(_I32, stopped, _NO_ARG)
+DEFINE_PRIM(_VOID, destroy, _NO_ARG)
+DEFINE_PRIM(_VOID, loadFiles, _ABSTRACT(std::vector<const char*>))
