@@ -36,11 +36,7 @@ class MiniAudio {
 		return 0;
 	}
 
-	@:runtime inline public static function loadFiles(arr:Array<String>):Void {
-		var vec = StdVectorString.fromStringArray(arr);
-		_loadFiles(vec);
-	}
-	@:hlNative("ma_thing", "load_files") public static function _loadFiles(argv:StdVectorString):Void {}
+	@:hlNative("ma_thing", "load_files") public static function loadFiles(arr:Array<String>):Void {}
 
 	@:hlNative("ma_thing", "get_playback_position") public static function getPlaybackPosition():Float {
 		return 0;

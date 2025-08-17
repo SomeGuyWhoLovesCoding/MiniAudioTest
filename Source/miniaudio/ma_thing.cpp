@@ -506,14 +506,14 @@ HL_PRIM void HL_NAME(destroy_hl)(_NO_ARG) {
 	freeThingies();
 }
 
-HL_PRIM void HL_NAME(load_files)(std::vector<const char*> argv)
+HL_PRIM void HL_NAME(load_files)(varray argv)
 {
-	if (argv.size() == 0) {
+	if (argv.size == 0) {
 		printf("No input files.\n");
 		return;
 	}
 
-	g_decoderCount   = argv.size();
+	g_decoderCount   = argv.size;
 	g_pDecoders      = (ma_decoder*)malloc(sizeof(*g_pDecoders)      * g_decoderCount);
 	g_pDecodersActive = (ma_bool32*)malloc(sizeof(ma_bool32) * g_decoderCount);
 	g_pDecoderLengths = (ma_uint64*)malloc(sizeof(ma_uint64) * g_decoderCount);
@@ -586,5 +586,5 @@ DEFINE_PRIM(_VOID, start_hl, _VOID)
 DEFINE_PRIM(_VOID, stop_hl, _VOID)
 DEFINE_PRIM(_VOID, stopped_hl, _BOOL)
 DEFINE_PRIM(_VOID, destroy_hl, _VOID)
-DEFINE_PRIM(_VOID, load_files, _ABSTRACT("std::vector<const char*>"))
+DEFINE_PRIM(_VOID, load_files, _ARR)
 #endif
