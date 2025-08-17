@@ -1,16 +1,7 @@
 <xml>
 	<pragma once="true" />
 
-	<cppflag value="HASHLINK" if="HASHLINK" />
-
 	<set name="PROJECT_DIR" value="${this_dir}/Source" />
-	<set name="HASHLINK" value="F:/jerem/Downloads+/hl-1.12" />
-	<set name="HL_INCLUDE" value="${HASHLINK}/include" />
-	<set name="HL_BIN" value="${HASHLINK}" />
-
-	<echo value="hashlink: ${HASHLINK}" />
-    <echo value="hashlink include: ${HL_INCLUDE}" />
-    <echo value="hashlink bin: ${HL_BIN}" />
 
 	<files id="miniaudio">
 		<compilerflag value="-I${PROJECT_DIR}/miniaudio" />
@@ -19,24 +10,8 @@
 		<file name="${PROJECT_DIR}/miniaudio/ma_thing.cpp" />
 		<compilerflag value="-I${HASHLINK}/include" />
 	</files>
-
-	<!-- CPP -->
 	
-	<target id="default">
+	<target id="haxe">
 		<files id="miniaudio" />
 	</target>
-	
-
-	<!-- HL -->
-	<!--
-	<target id="default" output="ma_thing" toolid="dll" tool="linker">
-		<files id="miniaudio" />
-		<libpath name="${HASHLINK}" if="windows" />
-		<libpath name="/usr/local/lib" if='macos' />
-		<lib name="libhl.lib" if="windows" />
-		<lib name="-lhl" unless="windows" />
-		<ext value=".hdll" />
-		<outdir name="Export/hl/bin" />
-	</target>
-	-->
 </xml>
