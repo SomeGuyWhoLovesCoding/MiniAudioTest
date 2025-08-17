@@ -31,7 +31,7 @@ extern class StdVectorString
 #elseif hl
 typedef ConstCharStarPtr = hl.Abstract<"const char*">;
 abstract ConstCharStar(ConstCharStarPtr) {
-    static function fromString(s:String):ConstCharStar {
+    public static function fromString(s:String):ConstCharStar {
         return untyped s.bytes; // Placeholder for now, the real code will come fron knowledge
     }
 }
