@@ -32,7 +32,7 @@ extern class StdVectorString
 typedef ConstCharStarPtr = hl.Abstract<"const char*">;
 abstract ConstCharStar(ConstCharStarPtr) {
     public static function fromString(s:String):ConstCharStar {
-        return untyped s.bytes; // Placeholder for now, the real code will come fron knowledge
+        return Std.downcast(@:privateAccess s.toUtf8(), ConstCharStar); // Placeholder for now, the real code will come fron knowledge
     }
 }
 
