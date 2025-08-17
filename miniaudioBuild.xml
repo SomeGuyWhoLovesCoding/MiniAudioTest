@@ -20,11 +20,16 @@
 		<compilerflag value="-I${HASHLINK}/include" />
 	</files>
 
-	<target id="default" output="ma_thing" toolid="dll" tool="linker">
-		<section if="mingw || macos || linux">
-			<lib name="-lpthread" />
-		</section>
+	<!-- CPP -->
+	
+	<target id="default">
+		<files id="miniaudio" />
+	</target>
+	
 
+	<!-- HL -->
+	<!--
+	<target id="default" output="ma_thing" toolid="dll" tool="linker">
 		<files id="miniaudio" />
 		<libpath name="${HASHLINK}" if="windows" />
 		<libpath name="/usr/local/lib" if='macos' />
@@ -33,4 +38,5 @@
 		<ext value=".hdll" />
 		<outdir name="Export/hl/bin" />
 	</target>
+	-->
 </xml>
