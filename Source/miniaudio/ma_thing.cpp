@@ -11,7 +11,9 @@
 	* I will fucking kill whoever structured hl like this(not)
 	* Yannaris did
 */
-#ifdef HASHLINK
+#define HASHLINK 1 // Fuck you HL for not having a built-in build.xml feature for c++ flagging
+
+#if HASHLINK
 //#define HL_NAME(n) ma_thing_##n
 
 #include <hl.h>
@@ -369,7 +371,7 @@ void loadFiles(std::vector<const char*> argv)
 
 // Now for the hl part
 
-#ifdef HASHLINK
+#if HASHLINK
 HL_PRIM int HL_NAME(get_mixer_state)(_NO_ARG) {
 	return MIXER_STATE;
 }
@@ -506,14 +508,14 @@ HL_PRIM void HL_NAME(destroy_hl)(_NO_ARG) {
 	freeThingies();
 }
 
-HL_PRIM void HL_NAME(load_files)(varray argv)
+HL_PRIM void HL_NAME(load_files)(std::vector<const char*> argv)
 {
-	if (argv.size == 0) {
+	if (argv.size() == 0) {
 		printf("No input files.\n");
 		return;
 	}
 
-	g_decoderCount   = argv.size;
+	g_decoderCount   = argv.size();
 	g_pDecoders      = (ma_decoder*)malloc(sizeof(*g_pDecoders)      * g_decoderCount);
 	g_pDecodersActive = (ma_bool32*)malloc(sizeof(ma_bool32) * g_decoderCount);
 	g_pDecoderLengths = (ma_uint64*)malloc(sizeof(ma_uint64) * g_decoderCount);
@@ -586,5 +588,5 @@ DEFINE_PRIM(_VOID, start_hl, _VOID)
 DEFINE_PRIM(_VOID, stop_hl, _VOID)
 DEFINE_PRIM(_VOID, stopped_hl, _BOOL)
 DEFINE_PRIM(_VOID, destroy_hl, _VOID)
-DEFINE_PRIM(_VOID, load_files, _ARR)
+DEFINE_PRIM(_VOID, load_files, _ABSTRACT(std::vector<const char*>))
 #endif
