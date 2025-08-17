@@ -260,9 +260,6 @@ void setPlaybackRate(float value) {
 
 void start() {
 	if (exists == 0) return;
-	if (MIXER_STATE == 3) {
-		seekToPCMFrame(0);
-	}
 	ma_device_start(&device);
 	MIXER_STATE = 1;
 }

@@ -29,7 +29,12 @@ extern class StdVectorString
     function size() : Int;
 }
 #elseif hl
-import cpp.ConstCharStar;
+typedef ConstCharStarPtr = hl.Abstract<"const char*">;
+abstract ConstCharStar(ConstCharStarPtr) {
+    static function fromString(s:String):ConstCharStar {
+        return untyped s.bytes; // Placeholder for now, the real code will come fron knowledge
+    }
+}
 
 typedef StdVectorStringPtr = hl.Abstract<"std::vector<const char*>">;
 abstract StdVectorString(StdVectorStringPtr)

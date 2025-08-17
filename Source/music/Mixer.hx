@@ -90,6 +90,10 @@ class Mixer {
 	}
 
 	static public function startMusic():Void {
+		// Can't do it in pure c++ on hl so I removed this exact code from the hxcpp version to put this in here.
+		if (MiniAudio.getMixerState() == MixerState.FINISHED) {
+			MiniAudio.seekToPCMFrame(0);
+		}
 		MiniAudio.start();
 	}
 
