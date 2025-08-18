@@ -9,7 +9,8 @@ class Main extends Application
 {
 	override function onWindowCreate()
 	{
-		Mixer.load(Sys.args());
+		var songPath:Array<String> = #if cpp Sys.args() #else ["Assets/Inst.flac", "Assets/Voices.flac"] #end; // HL for some fucking reason doesn't support any system arguments whatso ever so here you go
+		Mixer.load(songPath);
 		Mixer.startMusic();
 
 		window.onKeyDown.add(function(keycode, keymod) {

@@ -308,14 +308,14 @@ HL_PRIM void HL_NAME(destroy)(_NO_ARG) {
 	freeThingies();
 }
 
-HL_PRIM void HL_NAME(loadFiles)(std::vector<const char*> argv)
+HL_PRIM void HL_NAME(loadFiles)(varray* argv)
 {
-	if (argv.size() == 0) {
+	if (argv->size == 0) {
 		printf("No input files.\n");
 		return;
 	}
 
-	g_decoderCount   = argv.size();
+	g_decoderCount   = argv->size;
 	g_pDecoders      = (ma_decoder*)malloc(sizeof(*g_pDecoders)      * g_decoderCount);
 	g_pDecodersActive = (ma_bool32*)malloc(sizeof(ma_bool32) * g_decoderCount);
 	g_pDecoderLengths = (ma_uint64*)malloc(sizeof(ma_uint64) * g_decoderCount);
@@ -327,7 +327,7 @@ HL_PRIM void HL_NAME(loadFiles)(std::vector<const char*> argv)
 	decoderConfig = ma_decoder_config_init(SAMPLE_FORMAT, CHANNEL_COUNT, SAMPLE_RATE);
 
 	for (iDecoder = 0; iDecoder < g_decoderCount; ++iDecoder) {
-		const char* path = argv[iDecoder];
+		const char* path = hl_aptr(argv, const char*)[iDecoder];
 
 		g_pDecodersVolume[iDecoder] = 1.0;
 
@@ -339,7 +339,7 @@ HL_PRIM void HL_NAME(loadFiles)(std::vector<const char*> argv)
 			}
 			freeThingies();
 
-			printf("Failed to load %s.\n", argv[iDecoder]);
+			printf("Failed to load %s.\n", path);
 			exists = 0;
 			return;
 		}
@@ -388,4 +388,4 @@ DEFINE_PRIM(_VOID, start, _NO_ARG)
 DEFINE_PRIM(_VOID, stop, _NO_ARG)
 DEFINE_PRIM(_I32, stopped, _NO_ARG)
 DEFINE_PRIM(_VOID, destroy, _NO_ARG)
-DEFINE_PRIM(_VOID, loadFiles, _ABSTRACT(std::vector<const char*>))
+DEFINE_PRIM(_VOID, loadFiles, _ARR)

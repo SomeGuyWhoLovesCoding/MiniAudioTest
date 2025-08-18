@@ -37,10 +37,13 @@ class MiniAudio {
 	}
 
 	@:runtime inline public static function loadFiles(arr:Array<String>):Void {
-		var vec = StdVectorString.fromStringArray(arr);
-		_loadFiles(vec);
+		var nativeArray = new hl.NativeArray(arr.length);
+		for (i in 0...arr.length) {
+			nativeArray[i] = @:privateAccess arr[i].toUtf8();
+		}
+		_loadFiles(nativeArray);
 	}
-	@:hlNative("ma_thing", "loadFiles") public static function _loadFiles(argv:StdVectorString):Void {}
+	@:hlNative("ma_thing", "loadFiles") public static function _loadFiles(args:hl.NativeArray<hl.Bytes>):Void {}
 
 	@:hlNative("ma_thing", "get_playback_position") public static function getPlaybackPosition():Float {
 		return 0;
