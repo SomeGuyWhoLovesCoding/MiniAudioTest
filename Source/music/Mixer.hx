@@ -115,7 +115,7 @@ class Mixer {
 				while (_time - rawPlaybackPosition > multiply && /* Make sure not to overload your drift fixer */ multiply < 0.75) {
 					multiply += 0.01; // Double the adjustment value if the drift is too large
 				}
-				var subtract = (_time - rawPlaybackPosition) * multiply;
+				var subtract = (_time - rawPlaybackPosition) * (multiply * speed);
 				_time -= subtract;
 			}
 			Sys.println('Time: $time, Drift Adjustment Value: $multiply');
