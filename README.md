@@ -8,4 +8,4 @@ Please note it requires you to clone this [lime fork](https://github.com/SomeGuy
 HL
 ---
 
-Run `haxelib run hxcpp miniaudioBuild_HL.xml`
+Simply run a build.xml in the "buildXmls/hl" folder. `haxelib run hxcpp buildXmls/hl/miniaudioBuild.xml` for example.
