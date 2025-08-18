@@ -1,7 +1,7 @@
 package miniaudio;
 
 #if cpp
-@:buildXml('<include name="../../../miniaudioBuild.xml" />')
+@:buildXml('<include name="../../../buildXmls/miniaudioBuild.xml" />')
 @:unreflective @:keep
 @:include("./include/ma_thing.h")
 extern class MiniAudio {
