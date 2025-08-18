@@ -27,8 +27,10 @@ class Main extends Application
 					Mixer.time -= 1000;
 				case KeyCode.LEFT_BRACKET: // Lower playback rate
 					Mixer.speed -= 0.1;
+					Sys.println('Speed changed to ${Mixer.speed * 100}%');
 				case KeyCode.RIGHT_BRACKET: // Higher playback rate
 					Mixer.speed += 0.1;
+					Sys.println('Speed changed to ${Mixer.speed * 100}%');
 				case KeyCode.ESCAPE: // Escape
 					Mixer.destroyMusic();
 					Sys.exit(0);

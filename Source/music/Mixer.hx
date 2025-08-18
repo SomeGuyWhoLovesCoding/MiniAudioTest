@@ -72,8 +72,9 @@ class Mixer {
 	static var speed(default, set):Float = 1;
 
 	static function set_speed(value:Float) {
-		MiniAudio.setPlaybackRate(Math.max(value, 0.1));
-		return speed = value;
+		speed = Math.max(value, 0.1);
+		MiniAudio.setPlaybackRate(speed);
+		return speed;
 	}
 
 	private static var _time:Float;
